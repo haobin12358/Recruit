@@ -1,44 +1,35 @@
 # *- coding:utf8 *-
 from flask_restful import Resource
-from flask import request
+from common.Result import bad_result
 from control.Users import User
+from common.JudgeData import JudgeData
 import json
 
-class Login(Resource):
-    '''
-        用户登录功能，post方法
-        需要提供含有name和password的body体
-    '''
-    def post(self):
-        form = request.data
-        form = json.loads(form)
-        #根据control层数据处理进行判断
-        if User().isLogin(form):
-            result = {
-                "status_code":200,
-                "message":"ok"
-            }
+'''
+    用于处理关于用户的接口
+    根据函数名称确认接口方法
+    根据apis中的key来判断接口的指向
+'''
+class Users(Resource):
+    def post(self, name):
+        user = User()
+        judgeData = JudgeData()
 
-        else:
-            result = {
-                "status_code":404001,
-                "message":"error"
-            }
-        return result
+        #api列表的定义
+        apis = {
+            'login':'{0}'.format(user.login()),
+            'register':'{0}'.format(user.resgister())
+        }
+        #将字符串中自动转化的单引号换成双引号，保证json格式，之后loads形成json
+        json_obj = apis[name].replace("\'","\"")
+        json_obj = json.loads(json_obj)
 
-class Resgiter(Resource):
-    '''
-        用户注册功能，post方法
-        需要提供含有name和password、isCompony的body体
-    '''
-    def post(self):
-        print 1
-        return {}
+        #判断是否含有对应的api
+        if judgeData.inData(name, apis):
+            return json_obj
 
-class Test(Resource):
-    '''
-        测试用接口
-    '''
-    def get(self):
-        return 'hello world'
+        return bad_result
+
+
+
 
