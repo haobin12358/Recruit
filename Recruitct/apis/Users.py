@@ -20,12 +20,12 @@ class Users(Resource):
             'login':'{0}'.format(user.login()),
             'register':'{0}'.format(user.resgister())
         }
-        #将字符串中自动转化的单引号换成双引号，保证json格式，之后loads形成json
-        json_obj = apis[name].replace("\'","\"")
-        json_obj = json.loads(json_obj)
 
         #判断是否含有对应的api
         if judgeData.inData(name, apis):
+            # 将字符串中自动转化的单引号换成双引号，保证json格式，之后loads形成json
+            json_obj = apis[name].replace("\'", "\"")
+            json_obj = json.loads(json_obj)
             return json_obj
 
         return bad_result
