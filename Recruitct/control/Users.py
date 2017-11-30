@@ -11,7 +11,7 @@ class User():
         form = json.loads(form)
         judgeData = JudgeData()
         #先判断是否含有必要参数
-        if judgeData.inData('name',form) or judgeData.inData('password', form):
+        if not judgeData.inData('name',form) or not judgeData.inData('password', form):
             return bad_get
         #根据service层数据处理进行判断
         user = sql_user().isLogin(form['name'])
@@ -32,8 +32,8 @@ class User():
         form = json.loads(form)
         judgeData = JudgeData()
         #先判断是否含有必要参数
-        if judgeData.inData('name', form) or judgeData.inData('password', form) \
-                or judgeData.inData('isCompony', form):
+        if not judgeData.inData('name', form) or not judgeData.inData('password', form) \
+                or not judgeData.inData('isCompony', form):
             return bad_get
         #进行数据库写入操作
         user = sql_user.isRegister(form['name'], form['password'], form['isCompony'])
